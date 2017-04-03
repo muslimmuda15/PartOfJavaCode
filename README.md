@@ -1,2 +1,3 @@
 # PartOfJavaCode
-Bagian project untuk mendapatkan seluruh bagian dari java kode menggunakan AST (API)
+
+Getting all code component and generating on tree using AST API.
