@@ -10,5 +10,5 @@ package global.data;
  * @author RACHMAD
  */
 public class Path {
-    public static String location = ".";
+    public static String location = "home";
 }

@@ -5,6 +5,7 @@
  */
 package ast;
 
+import static global.component.GlobalComponent.mainTextArea;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -18,6 +19,7 @@ import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import template.CodePanel;
 import template.Menu;
 import template.Toolbar;
 import utility.TextLine;
@@ -30,7 +32,6 @@ public class Main extends JFrame
 {
     private final JSplitPane mainSplit = new JSplitPane();
     private JTree mainTree;
-    private final JTextPane mainTextArea = new JTextPane();
     private final JScrollPane mainTextAreaScroll = new JScrollPane(mainTextArea);
     private TextLine textLine;
     
@@ -38,7 +39,7 @@ public class Main extends JFrame
     {
         lookAndFeel();
         init();
-        show();
+        view();
     }
     
     /*
@@ -48,8 +49,11 @@ public class Main extends JFrame
     {
         mainTree = new JTree();
         textLine = new TextLine(mainTextArea);
-        
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+    
+    private void view()
+    {
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
@@ -63,13 +67,9 @@ public class Main extends JFrame
         setJMenuBar(new Menu().setMenu());
         add(new Toolbar().setToolbar(), BorderLayout.BEFORE_FIRST_LINE);
         
-        add(mainSplit, "Center");
-            mainSplit.setResizeWeight(0.3);
-            mainSplit.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-            mainSplit.setLeftComponent(mainTree);
-            mainSplit.setRightComponent(mainTextAreaScroll);
-                
-        mainTextAreaScroll.setRowHeaderView(textLine);
+        add(new CodePanel(), "Center");
+        
+        show();
     }
     
     private class closeWindows extends java.awt.event.WindowAdapter
@@ -81,7 +81,7 @@ public class Main extends JFrame
                 JOptionPane.YES_NO_OPTION,
             JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION)
             {
-                // 	new delete().proses();
+                // new delete().proses();
                 System.exit(0);
             }
         }

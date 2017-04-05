@@ -5,17 +5,26 @@
  */
 package template;
 
+import static global.component.GlobalComponent.mainTextArea;
+import global.data.Path;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
 
@@ -85,9 +94,12 @@ public class Toolbar
         toolBarButtonStyle(btnNew, "New", false).addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
             {
-                
+                if(JOptionPane.showConfirmDialog(null, "Are you sure?", "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION)
+                {
+                    
+                }
             }
-        });;
+        });
         toolbar.addSeparator();
         toolBarButtonStyle(btnOpen, "Open", false).addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e)
@@ -97,6 +109,32 @@ public class Toolbar
                 {
                     if(openDialog.getExtentionFile().equalsIgnoreCase("java"))
                     {
+                        BufferedReader in = null;
+                        try {
+                            /*
+                             * include file to text
+                             */
+                            in = new BufferedReader(new FileReader(openDialog.getFullPathFile()));
+                            String line = in.readLine();
+                            String include="";
+                            while(line != null)
+                            {
+                                include+=line + "\n";
+                                line = in.readLine();
+                            }   
+                            mainTextArea.setText(include);
+                            Path.location = openDialog.getFullPathFile().toString();
+                        } catch (FileNotFoundException ex) {
+                            Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IOException ex) {
+                            Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                        } finally {
+                            try {
+                                in.close();
+                            } catch (IOException ex) {
+                                Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
                     }
                 }
             }
