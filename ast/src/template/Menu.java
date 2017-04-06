@@ -26,19 +26,7 @@ public class Menu
     JMenu build = new JMenu("  Build  ");
     JMenu help = new JMenu("  Help  ");
     
-    JMenu menuNew = new JMenu("New")
-    {
-        @Override
-        public Dimension getPreferredSize() {
-            Dimension d = super.getPreferredSize();
-            d.width = Math.max(d.width, 300); // set minimums
-            return d;
-        }
-    };
-        JMenuItem menuText = new JMenuItem("Enter Text Code");
-        JMenuItem menuClass = new JMenuItem("Load Class File");
-        JMenuItem menuJar = new JMenuItem("Load Jar File");
-        
+    JMenuItem menuNew = new JMenuItem("New");
     JMenuItem menuOpen = new JMenuItem("Open\u2026", new ImageIcon(getClass().getResource("/icon/icon1.png")));
     JMenuItem menuClose = new JMenuItem("Close");
     JMenuItem menuSave = new JMenuItem("Save", new ImageIcon(getClass().getResource("/icon/icon11.png")));
@@ -104,9 +92,6 @@ public class Menu
     {
         menu.add(file);
             file.add(menuNew);
-                menuNew.add(menuText);
-                menuNew.add(menuClass);
-                menuNew.add(menuJar);
             file.add(menuItemKeyCombination(menuOpen, 'O'));
             file.addSeparator();
             file.add(menuItemKeyCombination(menuSave, 'S'));
