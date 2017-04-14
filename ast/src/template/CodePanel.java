@@ -5,6 +5,7 @@
  */
 package template;
 
+import static global.component.GlobalComponent.codeTree;
 import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,9 +27,6 @@ import javax.swing.tree.DefaultTreeModel;
  */
 public class CodePanel extends JPanel{
     private final TextCodeArea mainText;
-    private final DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-    private DefaultTreeModel treeModel = new DefaultTreeModel(root);
-    private final JTree codeTree = new JTree(treeModel);
     private DefaultMutableTreeNode field;
     private DefaultMutableTreeNode method;
     private JSplitPane mainSplit = new JSplitPane();
@@ -40,6 +38,7 @@ public class CodePanel extends JPanel{
     
     public CodePanel()
     {
+        codeTree.setModel(null);
         mainText = new TextCodeArea();
         setLayout(new BorderLayout());
         add(mainSplit, "Center");

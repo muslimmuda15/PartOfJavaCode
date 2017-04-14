@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ast;
+
 
 import static global.component.GlobalComponent.mainTextArea;
 import java.awt.BorderLayout;
@@ -37,7 +37,6 @@ public class Main extends JFrame
     
     public Main()
     {
-        lookAndFeel();
         init();
         view();
     }
@@ -87,7 +86,7 @@ public class Main extends JFrame
         }
     }
     
-    private void lookAndFeel()
+    private static final void lookAndFeel()
     {
         try
         {
@@ -96,6 +95,7 @@ public class Main extends JFrame
         }
         catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
         {
+            ex.printStackTrace();
         }
     }
     
@@ -104,6 +104,7 @@ public class Main extends JFrame
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        lookAndFeel();
         new Main();
     }
     
