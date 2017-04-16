@@ -32,6 +32,7 @@ import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.WhileStatement;
+import template.TreeRender;
 
 /**
  *
@@ -40,18 +41,19 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 public class StructureParse 
 {
     private DefaultTreeModel model;
-    private DefaultMutableTreeNode _package = new DefaultMutableTreeNode("root");
+    private DefaultMutableTreeNode _package;
     private DefaultMutableTreeNode _class,_for,_while,_whileBody,_do,_doBody,_method,_if,_else,
                                    _declare,_then,_forBody,_ifBody,_elseBody,_try,_tryBody,_final,_fibalBody,
                                    _catch,_catchBody,_methodCall,_constructorCall,_field;
     public void setCode(JTextPane textCode)
     {
-        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        ASTParser parser = ASTParser.newParser(AST.JLS2);
         parser.setSource(textCode.getText().toCharArray());
         //parser.setSource("/*abc*/".toCharArray());
         parser.setKind(ASTParser.K_COMPILATION_UNIT);
         
         final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+        _package = new DefaultMutableTreeNode("root");
         
         codeTree.setRootVisible(false);
         
@@ -85,6 +87,14 @@ public class StructureParse
                     type="class ";
                 _class=new DefaultMutableTreeNode(type+node.getName());
                 _package.add(_class);
+                
+                String superClass = node.getSuperclass()+"";
+                if(!(superClass.equals("null")||(superClass.equals(""))))
+                    _class.add(new DefaultMutableTreeNode("extends "+superClass));
+                for(Object getInterface : node.superInterfaces())
+                {
+                    _class.add(new DefaultMutableTreeNode("implements " + getInterface));
+                }
                 return true;
             }
             
@@ -191,7 +201,7 @@ public class StructureParse
                 _method.add(_if);
                 enclose(node.getThenStatement().toString(),_if);
                 elseExist=node.getElseStatement()+"";
-                if(!(elseExist.equals("")))
+                if(!(elseExist.equals("")||elseExist.equals("null")))
                 {
                     _else=new DefaultMutableTreeNode("else");
                     _method.add(_else);
@@ -266,7 +276,7 @@ public class StructureParse
                 _method.add(_try);
                 enclose(node.getBody().toString(),_try);
                 ada=node.getFinally()+"";
-                if(!(ada.equals("")))
+                if(!(ada.equals("")||ada.equals("null")))
                 {
                     _final=new DefaultMutableTreeNode("finally");
                     _method.add(_final);
@@ -286,14 +296,17 @@ public class StructureParse
         });
         
         model = new DefaultTreeModel(_package);
+        model.reload();
         codeTree.setModel(model);
+        codeTree.setCellRenderer(new TreeRender());
+//        ((DefaultTreeModel)codeTree.getModel()).reload();
         for (int i = 0; i < codeTree.getRowCount(); i++)
             codeTree.expandRow(i);
     }
     
     private void enclose(String body,DefaultMutableTreeNode parentNode)
     {
-        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        ASTParser parser = ASTParser.newParser(AST.JLS2);
         /*
          * make parse result into OPP structure, because AST wanna be that.
         */
@@ -347,7 +360,7 @@ public class StructureParse
                     parentNode.add(_if);
                     enclose(node.getThenStatement().toString(),_if);
                     elseExist=node.getElseStatement()+"";
-                    if(!(elseExist.equals("")))
+                    if(!(elseExist.equals("")||(elseExist.equals("null"))))
                     {
                         _else=new DefaultMutableTreeNode("else");
                         parentNode.add(_else);
@@ -424,7 +437,7 @@ public class StructureParse
                     parentNode.add(_try);
                     enclose(node.getBody().toString(),_try);
                     ada=node.getFinally()+"";
-                    if(!(ada.equals("")))
+                    if(!(ada.equals("")||(ada.equals("null"))))
                     {
                         _final=new DefaultMutableTreeNode("finally");
                         parentNode.add(_final);
