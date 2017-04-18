@@ -5,6 +5,7 @@
  */
 package template;
 
+import ast.StructureParse;
 import static global.component.GlobalComponent.mainTextArea;
 import global.data.Path;
 import java.awt.Component;
@@ -36,6 +37,7 @@ public class Toolbar
 {
     private JToolBar toolbar;
     private OpenDialog openDialog;
+    private StructureParse sp = new StructureParse();
     
     private final Map<String, Component> componentsByName = new HashMap<>();
     
@@ -107,35 +109,43 @@ public class Toolbar
                 openDialog = new OpenDialog("Java", new String[]{"java"});
                 if(openDialog.isApproved())
                 {
-                    if(openDialog.getExtentionFile().equalsIgnoreCase("java"))
+                    new Thread(new Runnable()
                     {
-                        BufferedReader in = null;
-                        try {
-                            /*
-                             * include file to text
-                             */
-                            in = new BufferedReader(new FileReader(openDialog.getFullPathFile()));
-                            String line = in.readLine();
-                            String include="";
-                            while(line != null)
+                        public void run()
+                        {
+                            if(openDialog.getExtentionFile().equalsIgnoreCase("java"))
                             {
-                                include+=line + "\n";
-                                line = in.readLine();
-                            }   
-                            mainTextArea.setText(include);
-                            Path.location = openDialog.getFullPathFile().toString();
-                        } catch (FileNotFoundException ex) {
-                            Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IOException ex) {
-                            Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
-                        } finally {
-                            try {
-                                in.close();
-                            } catch (IOException ex) {
-                                Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                                BufferedReader in = null;
+                                try {
+                                    /*
+                                     * include file to text
+                                     */
+                                    in = new BufferedReader(new FileReader(openDialog.getFullPathFile()));
+                                    String line = in.readLine();
+                                    String include="";
+                                    while(line != null)
+                                    {
+                                        include+=line + "\n";
+                                        line = in.readLine();
+                                    }   
+                                    mainTextArea.setText(include);
+                                    Path.location = openDialog.getFullPathFile().toString();
+
+                                    sp.setCode(mainTextArea);
+                                } catch (FileNotFoundException ex) {
+                                    Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                                } finally {
+                                    try {
+                                        in.close();
+                                    } catch (IOException ex) {
+                                        Logger.getLogger(Toolbar.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                }
                             }
                         }
-                    }
+                    }).start();
                 }
             }
         });

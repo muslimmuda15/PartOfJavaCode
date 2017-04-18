@@ -7,6 +7,7 @@ package global.component;
 
 import javax.swing.JFrame;
 import javax.swing.JTextPane;
+import javax.swing.JTree;
 
 /**
  *
@@ -15,4 +16,5 @@ import javax.swing.JTextPane;
 public class GlobalComponent {
     public static JFrame mainFrame = new JFrame("UML Generator");
     public static JTextPane mainTextArea = new JTextPane();
+    public static JTree codeTree = new JTree();
 }
