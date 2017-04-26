@@ -12,3 +12,7 @@ hs_err_pid*
 /ast/nbproject/private/
 /ast/build/
 /ast/src/test/
+
+# backup file
+*.bak
+*.java.bak

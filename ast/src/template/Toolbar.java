@@ -28,6 +28,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToolBar;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.TabSet;
+import javax.swing.text.TabStop;
 
 /**
  *
@@ -129,6 +135,12 @@ public class Toolbar
                                         line = in.readLine();
                                     }   
                                     mainTextArea.setText(include);
+                                    
+                                    StyleContext sc = StyleContext.getDefaultStyleContext();
+                                    TabSet tabs = new TabSet(new TabStop[] { new TabStop(4) });
+                                    AttributeSet paraSet = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.TabSet, tabs);
+                                    mainTextArea.setParagraphAttributes(paraSet, false);
+                                    
                                     Path.location = openDialog.getFullPathFile().toString();
 
                                     sp.setCode(mainTextArea);
